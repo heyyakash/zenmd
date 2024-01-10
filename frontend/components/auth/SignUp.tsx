@@ -43,7 +43,7 @@ const SignUp = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-[90%] md:w-[450px] ">
                 <div className="my-6">
                     <h3 className=" text-4xl font-bold text-center">Create an account</h3>
-                    <p className="text-lg  text-center mt-3">Enter your email and password to sign up</p>
+                    <p className="text-lg text-white/50 text-center mt-3">Enter your email and password to sign up</p>
                 </div>
 
                 <FormField
