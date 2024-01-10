@@ -67,6 +67,9 @@ module.exports = {
           to: { height: "0" },
         },
       },
+      fontFamily:{
+        poppins:['Poppins']
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
