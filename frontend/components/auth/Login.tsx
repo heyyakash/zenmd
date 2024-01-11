@@ -40,7 +40,7 @@ const Login = () => {
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className=" w-[90%] md:w-[450px]">
                 <div className="my-6">
-                    <h3 className=" text-4xl font-bold text-center">Login</h3>
+                    <h3 className=" text-4xl font-bold text-center">Login to your account</h3>
                     <p className="text-lg text-white/50 text-center mt-3">Enter your email and password to Login</p>
                 </div>
                 <FormField
