@@ -19,7 +19,7 @@ const Editor = () => {
 
                 </textarea>
             </div>
-            <MarkDown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}  className='prose prose-2xl dark:prose-invert max-w-none w-full h-screen overflow-auto p-10'>
+            <MarkDown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}  className='prose dark:prose-invert   max-w-none w-full h-screen overflow-auto p-10'>
              {value}
             </MarkDown>
             
