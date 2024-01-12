@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 
+
+
 const formSchema = z.object({
     name: z.string().min(5).max(50),
     email: z.string().min(2, {
@@ -11,6 +13,9 @@ const formSchema = z.object({
     password: z.string().min(2).max(50)
 })
 
+interface payload extends z.infer<typeof formSchema>{
+    image:string
+}
 
 import { Button } from "@/components/ui/button"
 import {
@@ -23,6 +28,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { toast } from 'sonner'
 
 const SignUp = () => {
     const form = useForm<z.infer<typeof formSchema>>({
@@ -34,8 +40,29 @@ const SignUp = () => {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const payload : payload  = {
+            image:"https://blog.syncfusion.com/wp-content/uploads/2018/08/image-605.png",
+            email:values.email,
+            name:values.name,
+            password:values.password
+        }
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/user/create`,{
+            method:"POST",
+            body:JSON.stringify(payload)
+        })
+        const result = await res.json()
+        if(result.success){
+            toast.success("You have signed up successfully!!")
+            form.reset({
+                name:"",
+                email:"",
+                password:""
+            })
+        }else{
+            toast.error("Sign Up failed")
+        }
+        
     }
 
     return (

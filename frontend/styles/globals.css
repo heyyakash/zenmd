@@ -67,6 +67,6 @@
 
 @layer components{
   .input-primary{
-    @apply  text-xl font-semibold;
+    @apply  text-xl font-semibold placeholder:text-white/10 placeholder:font-light;
   }
 }
