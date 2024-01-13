@@ -22,6 +22,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { toast } from 'sonner'
 
 const Login = () => {
     const form = useForm<z.infer<typeof formSchema>>({
@@ -32,8 +33,17 @@ const Login = () => {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/user/login`,{
+            method:"POST",
+            body:JSON.stringify(values)
+        })
+        const result = await res.json()
+        if(result.success){
+            toast.success("Logged In")
+        }else{
+            toast.error(result.message)
+        }
     }
 
     return (
@@ -69,7 +79,7 @@ const Login = () => {
                         </FormItem>
                     )}
                 />
-                <Button type="submit" size={"lg"} className="mt-6 text-lg w-full" variant={"default"}>Sign up</Button>
+                <Button type="submit" size={"lg"} className="mt-6 text-lg w-full" variant={"default"}>Login</Button>
             </form>
         </Form>
     )
