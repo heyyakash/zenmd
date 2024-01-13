@@ -7,4 +7,5 @@ import (
 
 func AccountRouter(c *gin.Engine) {
 	c.POST("/user/create", auth.CreateNewAccount())
+	c.POST("/user/login", auth.LoginUser())
 }

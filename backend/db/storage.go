@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/heyyakash/zenmd/helpers"
@@ -68,4 +69,20 @@ func (s *PostgresStore) CreateAccount(user *modals.User) error {
 	}
 	log.Printf("%+v\n", resp)
 	return err
+}
+
+func (s *PostgresStore) GetAccountByEmail(email string) (*modals.LoginRequest, error) {
+	query := "select email, password from account where email=$1"
+	row := s.db.QueryRow(query, email)
+
+	var user modals.LoginRequest
+	err := row.Scan(&user.Email, &user.Password)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("Account not found")
+		}
+		return nil, err
+	}
+
+	return &user, nil
 }
