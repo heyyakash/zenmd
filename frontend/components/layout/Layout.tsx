@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
 import { useRouter } from 'next/router'
 import Editor from '../editor/Editor'
+import Aside from '../aside/Aside'
 
 interface props {
     children :ReactNode
@@ -18,18 +19,14 @@ const Dashboard: React.FC<props> = (props) => {
         document.cookie = `token= ;secure=true; path=/`
         router.push('/login')
     }
-    const tree  = {
-        Main:["Graph","Tree","Arrays"],
-        AWS: ["Ingress", "S3"],
-        DevOps : ["Terraform"]
-    }
+ 
     return (
         <div className='w-full h-screen flex flex-col'>
-            <div className='h-[70px] border-b border-secondary grid grid-rows-1 grid-cols-3 items-center p-4'>
+            <div className='h-[70px] border-b-2 border-secondary grid grid-rows-1 grid-cols-3 items-center p-4'>
 
                 <div className='flex items-center gap-4 w-full'>
                     <Menu cursor={"pointer"} />
-                    <div className="flex gap-2 items-center text-primary text-[1.5rem] font-medium ">
+                    <div className="flex gap-2 items-center  text-[1.5rem] font-medium ">
                         <StickyNote size={"30px"} /> ZenMD
                     </div>
                 </div>
@@ -66,7 +63,7 @@ const Dashboard: React.FC<props> = (props) => {
 
             </div>
             <div className='w-full h-full flex'>
-                <aside className='w-[350px] h-full border-r border-secondary'></aside>
+                <Aside />
                 {props.children}
             </div>
         </div>
