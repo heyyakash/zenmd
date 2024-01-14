@@ -44,4 +44,12 @@ const Auth = () => {
 
 }
 
+
 export default Auth
+
+
+Auth.getLayout = () => {
+    return (
+        <></>
+    )
+}

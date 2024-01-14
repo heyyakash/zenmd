@@ -7,7 +7,7 @@ import remarkGfm from 'remark-gfm'
 const Editor = () => {
     const [value, setValue] = useState("")
     return (
-        <main className='grid w-full h-screen grid-cols-2 grid-rows-1'>
+        <div className='grid w-full h-full grid-cols-2 grid-rows-1'>
             <div className='w-full h-screen'>
                 <textarea
                     autoFocus
@@ -23,7 +23,7 @@ const Editor = () => {
              {value}
             </MarkDown>
             
-        </main>
+        </div>
     )
 }
 

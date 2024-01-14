@@ -1,9 +1,17 @@
 import { ThemeProvider } from '@/components/Theme-provider'
+import Layout from '@/components/layout/Layout'
 import { Toaster } from '@/components/ui/sonner'
 import '@/styles/globals.css'
+import { NextComponentType, NextPageContext } from 'next'
 import type { AppProps } from 'next/app'
 
-export default function App({ Component, pageProps }: AppProps) {
+type ComponentType = {
+  Component: NextComponentType<NextPageContext, any, any> & { getLayout?: JSX.Element }
+  pageProps: any
+}
+
+export default function App({ Component, pageProps }: ComponentType) {
+  const layout = Component.getLayout
   return (
     <>
       <ThemeProvider
@@ -12,7 +20,14 @@ export default function App({ Component, pageProps }: AppProps) {
         enableSystem
         disableTransitionOnChange
       >
-        <Component {...pageProps} />
+        {layout?(
+          <Component {...pageProps} />
+          ):(
+            <Layout>
+          
+            <Component {...pageProps} />
+            </Layout>
+          )}
         <Toaster expand = {true} richColors/>
       </ThemeProvider></>
   )
