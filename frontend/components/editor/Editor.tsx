@@ -13,7 +13,7 @@ const Editor = () => {
                     autoFocus
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
-                    className='w-full p-10 bg-secondary outline-none h-full font-inter text-xl'
+                    className='w-full p-10 bg-gray-100 dark:bg-black outline-none border-r-2 border-secondary h-full font-inter text-xl'
                     placeholder='Enter markdown here'
                 >
 

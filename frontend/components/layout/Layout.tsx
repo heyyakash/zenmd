@@ -26,7 +26,7 @@ const Dashboard: React.FC<props> = (props) => {
 
                 <div className='flex items-center gap-4 w-full'>
                     <Menu cursor={"pointer"} />
-                    <div className="flex gap-2 items-center  text-[1.5rem] font-medium ">
+                    <div className="flex gap-2 items-center text-primary text-[1.5rem] font-medium ">
                         <StickyNote size={"30px"} /> ZenMD
                     </div>
                 </div>
