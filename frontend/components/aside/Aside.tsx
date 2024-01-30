@@ -2,6 +2,10 @@ import React, { useState } from 'react'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible'
 import { Button } from '../ui/button'
 import { CaretSortIcon } from '@radix-ui/react-icons'
+import { useQuery } from 'react-query';
+import { getDocs } from '@/api/docs';
+import Link from 'next/link';
+
 interface File {
     id: string;
     name: string;
@@ -9,24 +13,17 @@ interface File {
 
 const Aside = () => {
 
-    const files = [
-        {
-            id:"1",
-            name:"Graphs"
-        },
-        {
-            id:"2",
-            name:"Arrays"
-        },
-        {
-            id:"3",
-            name:"Trees"
-        },
-    ]
-      
+    const {data,error, isLoading} = useQuery("docs", getDocs) 
+    console.log(data)
+    if (isLoading){
+        return <>Loading</>
+    }
+    if (error) {
+        return <>Error</>
+    }
     return (
         <aside className='max-w-[350px] w-full h-full border-r-2 border-secondary'>
-            <CollapsibleBar heading = "Your Files" list = {files} />
+            <CollapsibleBar heading = "Your Files" list = {data.message} />
         </aside>
     )
 }
@@ -56,12 +53,12 @@ const CollapsibleBar: React.FC<CollapsibleBarProps> = (props) => {
                     </Button>
                 </CollapsibleTrigger>
             </div>
-            <CollapsibleContent className="space-y-2 ">
-                {props.list.map((x,i) => {
+            <CollapsibleContent className="space-y-2 flex flex-col">
+                {props?.list?.map((x,i) => {
                     return (
-                        <div key = {i} className="rounded-md bg-primary border truncate ... text-white dark:text-black  border-secondary hover:border-primary cursor-pointer  px-4 py-2  text-md font-medium shadow-sm">
+                        <Link href = {`editor/${x.id}`} key = {i} className="rounded-md w-full bg-primary border truncate ... text-white dark:text-black  border-secondary hover:border-primary cursor-pointer  px-4 py-2  text-md font-medium shadow-sm">
                             {x.name}
-                        </div>
+                        </Link>
 
                     )
                 })}

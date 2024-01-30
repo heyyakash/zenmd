@@ -8,6 +8,7 @@ import { Button } from '../ui/button'
 import { useRouter } from 'next/router'
 import Editor from '../editor/Editor'
 import Aside from '../aside/Aside'
+import Link from 'next/link'
 
 interface props {
     children :ReactNode
@@ -26,9 +27,9 @@ const Dashboard: React.FC<props> = (props) => {
 
                 <div className='flex items-center gap-4 w-full'>
                     <Menu cursor={"pointer"} />
-                    <div className="flex gap-2 items-center text-primary text-[1.5rem] font-medium ">
+                    <Link href = "/dashboard" className="flex gap-2 items-center text-primary text-[1.5rem] font-medium ">
                         <StickyNote size={"30px"} /> ZenMD
-                    </div>
+                    </Link>
                 </div>
 
                 <div className='flex gap-2 items-center  px-2 rounded-lg'>

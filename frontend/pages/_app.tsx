@@ -3,7 +3,10 @@ import Layout from '@/components/layout/Layout'
 import { Toaster } from '@/components/ui/sonner'
 import '@/styles/globals.css'
 import { NextComponentType, NextPageContext } from 'next'
-import type { AppProps } from 'next/app'
+import {
+  QueryClient,
+  QueryClientProvider,
+} from 'react-query'
 
 type ComponentType = {
   Component: NextComponentType<NextPageContext, any, any> & { getLayout?: JSX.Element }
@@ -12,8 +15,9 @@ type ComponentType = {
 
 export default function App({ Component, pageProps }: ComponentType) {
   const layout = Component.getLayout
+  const queryClient = new QueryClient()
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"
@@ -29,6 +33,6 @@ export default function App({ Component, pageProps }: ComponentType) {
             </Layout>
           )}
         <Toaster expand = {true} richColors/>
-      </ThemeProvider></>
+      </ThemeProvider></QueryClientProvider>
   )
 }

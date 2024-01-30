@@ -11,10 +11,13 @@ import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import { Button } from "../ui/button"
 import { FormEvent, useState } from "react"
+import { toast } from "sonner"
+import { useRouter } from "next/router"
 
 
 const Main = () => {
   const [data,setData] = useState("")
+  const router = useRouter()
   const createDocument = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log("Clicked")
@@ -29,7 +32,13 @@ const Main = () => {
       body:JSON.stringify({name:data})
     })
     const result = await res.json()
-    console.log(result)
+    if (result.success){
+      toast.success("Document Created!")
+      router.push(`editor/${result.message}`)
+    }
+    else if (result.success===false && result.message==="Document already exists"){
+      toast.error("Document already exists")
+    }
   }
 
   return (

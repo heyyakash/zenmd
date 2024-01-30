@@ -1,14 +1,37 @@
+import { getDocById } from '@/api/docs'
+import { useRouter } from 'next/router'
 import React, { FC, useState } from 'react'
 // import Markdown from './Markdown.mdx'
 import MarkDown from 'react-markdown'
+import { useQuery } from 'react-query'
 import rehypeHighlight from 'rehype-highlight'
 import remarkGfm from 'remark-gfm'
+import { Button } from '../ui/button'
 
-const Editor = () => {
+interface props {
+    id: string
+}
+
+const Editor : React.FC<props> = ({id}) => {
+    const router = useRouter()
     const [value, setValue] = useState("")
+    const {data,isError,isLoading} = useQuery("doc", async () => await getDocById(id), {
+        onSuccess:(d) => {
+            console.log(d)
+            setValue(d.message.content)
+        },
+        refetchInterval:false,
+        refetchOnMount:false,
+        refetchOnReconnect:false,
+        refetchIntervalInBackground:false,
+        refetchOnWindowFocus:false
+    })
     return (
         <div className='grid w-full h-full grid-cols-2 grid-rows-1'>
-            <div className='w-full h-screen'>
+            <div className='w-full h-screen flex flex-col'>
+                <div className='w-full h-[60px] flex items-center'>
+                    <Button className='ml-auto mr-3' size={"lg"}>Save</Button>
+                </div>
                 <textarea
                     autoFocus
                     value={value}
