@@ -55,20 +55,50 @@ func (s *PostgresStore) CreateAccounTable() error {
 	return err
 }
 
+func (s *PostgresStore) CreateMarkdownTable() error {
+	_, err := s.db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`)
+	if err != nil {
+		return err
+	}
+	query := `
+	CREATE TABLE if not exists markdown (
+		id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+		email VARCHAR(255) NOT NULL,
+		name VARCHAR(255) NOT NULL,
+		content TEXT,
+		shared VARCHAR(255)[]
+	)
+	`
+	_, err = s.db.Exec(query)
+	return err
+}
+
 func (s *PostgresStore) InitDB() {
 	if err := s.CreateAccounTable(); err != nil {
-		log.Fatal("Could not initalize account table")
+		log.Fatal("Could not initalize account table", err)
+	}
+	if err := s.CreateMarkdownTable(); err != nil {
+		log.Fatal("Could not initialize markdown table", err)
 	}
 }
 
 func (s *PostgresStore) CreateAccount(user *modals.User) error {
 	query := `insert into account (name, email, image,password) values ($1, $2, $3, $4)`
-	resp, err := s.db.Exec(query, user.Name, user.Email, user.Image, user.Password)
+	_, err := s.db.Exec(query, user.Name, user.Email, user.Image, user.Password)
 	if err != nil {
 		return err
 	}
-	log.Printf("%+v\n", resp)
 	return err
+}
+
+func (s *PostgresStore) CreateDocument(email string, name string) (string, error) {
+	query := `insert into markdown (email,name,shared) values ($1,$2,$3)`
+	var id string
+	err := s.db.QueryRow(query, email, name, "{}").Scan(&id)
+	if err != nil {
+		return "", err
+	}
+	return id, err
 }
 
 func (s *PostgresStore) GetAccountByEmail(email string) (*modals.LoginRequest, error) {
@@ -86,3 +116,7 @@ func (s *PostgresStore) GetAccountByEmail(email string) (*modals.LoginRequest, e
 
 	return &user, nil
 }
+
+// func (s *PostgresStore) CreateANewFile(name string, email string) error {
+// 	query := `insert into accounts`
+// }

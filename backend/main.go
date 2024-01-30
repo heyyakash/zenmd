@@ -29,7 +29,7 @@ func (s *APIServer) RunServer() {
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{helpers.LoadString("CLIENT_ORIGIN")},
 		AllowMethods:     []string{"PUT", "PATCH", "POST", "OPTIONS", "GET", "DELETE"},
-		AllowHeaders:     []string{"Origin", "auth-token", "content-type"},
+		AllowHeaders:     []string{"Origin", "auth-token", "content-type", "token"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
@@ -42,10 +42,16 @@ func (s *APIServer) RunServer() {
 			"message": "pong",
 		})
 	})
+
+	// initalizing routea
+
 	routes.AccountRouter(r)
+	routes.DocumentRoute(r)
+
 	if err := db.NewPostgresStore(); err != nil {
 		log.Fatal("Could not initalize db")
 	}
+
 	r.Run(s.listenAddr)
 }
 
