@@ -106,7 +106,7 @@ func (s *PostgresStore) CreateAccount(user *modals.User) error {
 func (s *PostgresStore) CreateDocument(email string, name string) (string, error) {
 	query := `insert into markdown (email,name,shared,content) values ($1,$2,$3, $4) returning id`
 	var id string
-	err := s.db.QueryRow(query, email, name, "{}", "### "+name).Scan(&id)
+	err := s.db.QueryRow(query, email, name, "{}", "# "+name).Scan(&id)
 	if err != nil {
 		return "", err
 	}
@@ -129,6 +129,65 @@ func (s *PostgresStore) GetAccountByEmail(email string) (*modals.LoginRequest, e
 	return &user, nil
 }
 
-// func (s *PostgresStore) CreateANewFile(name string, email string) error {
-// 	query := `insert into accounts`
-// }
+func (s *PostgresStore) GetRowsByEmail(email string, all bool) ([]modals.MarkdownRow, []modals.MarkdownInfo, error) {
+
+	var resultMin []modals.MarkdownInfo
+	var result []modals.MarkdownRow
+	if all {
+		query := `SELECT id, email, name, content, shared FROM markdown WHERE email = $1`
+		rows, err := s.db.Query(query, email)
+		if err != nil {
+			return nil, nil, err
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var row modals.MarkdownRow
+			err := rows.Scan(&row.ID, &row.Email, &row.Name, &row.Content, &row.Shared)
+			if err != nil {
+				return nil, nil, err
+			}
+			result = append(result, row)
+			if err := rows.Err(); err != nil {
+				return nil, nil, err
+			}
+
+		}
+	} else {
+		query := `SELECT id, name  FROM markdown WHERE email = $1`
+		rows, err := s.db.Query(query, email)
+		if err != nil {
+			return nil, nil, err
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var row modals.MarkdownInfo
+			err := rows.Scan(&row.ID, &row.Name)
+			if err != nil {
+				return nil, nil, err
+			}
+			resultMin = append(resultMin, row)
+			if err := rows.Err(); err != nil {
+				return nil, nil, err
+			}
+
+		}
+	}
+
+	return result, resultMin, nil
+
+}
+
+func (s *PostgresStore) GetDocumentByID(id string, email string) (modals.MarkdownRow, error) {
+	query := "select id,name,content,shared ,email from markdown where email=$1 and id=$2"
+	row := s.db.QueryRow(query, email, id)
+
+	var data modals.MarkdownRow
+	err := row.Scan(&data.ID, &data.Name, &data.Content, &data.Shared, &data.Email)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return data, fmt.Errorf("Data")
+		}
+		return data, err
+	}
+	return data, err
+}
