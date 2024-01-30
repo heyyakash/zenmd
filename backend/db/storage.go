@@ -82,6 +82,18 @@ func (s *PostgresStore) InitDB() {
 	}
 }
 
+func (s *PostgresStore) DoesRowExist(email string, name string) (bool, error) {
+	query := `SELECT EXISTS(SELECT 1 FROM markdown WHERE email = $1 AND name = $2)`
+
+	var exists bool
+	err := s.db.QueryRow(query, email, name).Scan(&exists)
+	if err != nil {
+		return false, err
+	}
+
+	return exists, nil
+}
+
 func (s *PostgresStore) CreateAccount(user *modals.User) error {
 	query := `insert into account (name, email, image,password) values ($1, $2, $3, $4)`
 	_, err := s.db.Exec(query, user.Name, user.Email, user.Image, user.Password)
@@ -92,9 +104,9 @@ func (s *PostgresStore) CreateAccount(user *modals.User) error {
 }
 
 func (s *PostgresStore) CreateDocument(email string, name string) (string, error) {
-	query := `insert into markdown (email,name,shared) values ($1,$2,$3)`
+	query := `insert into markdown (email,name,shared,content) values ($1,$2,$3, $4) returning id`
 	var id string
-	err := s.db.QueryRow(query, email, name, "{}").Scan(&id)
+	err := s.db.QueryRow(query, email, name, "{}", "### "+name).Scan(&id)
 	if err != nil {
 		return "", err
 	}

@@ -22,6 +22,19 @@ func CreateDocument() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, helpers.ResponseGenerator("Please provide a document name", false))
 			return
 		}
+
+		exists, err := db.Database.DoesRowExist(email, req.Name)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, helpers.ResponseGenerator("Error looking for existing doc", false))
+			log.Print("Error", err)
+			return
+		}
+
+		if exists == true {
+			ctx.JSON(http.StatusBadRequest, helpers.ResponseGenerator("Document already exists", false))
+			return
+		}
+
 		id, err := db.Database.CreateDocument(email, req.Name)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, helpers.ResponseGenerator("Error creating a new doc", false))
