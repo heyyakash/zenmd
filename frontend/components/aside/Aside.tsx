@@ -57,9 +57,9 @@ const CollapsibleBar: React.FC<CollapsibleBarProps> = (props) => {
                 </CollapsibleTrigger>
             </div>
             <CollapsibleContent className="space-y-2 ">
-                {props.list.map((x) => {
+                {props.list.map((x,i) => {
                     return (
-                        <div className="rounded-md bg-primary border truncate ... text-white dark:text-black  border-secondary hover:border-primary cursor-pointer  px-4 py-2  text-md font-medium shadow-sm">
+                        <div key = {i} className="rounded-md bg-primary border truncate ... text-white dark:text-black  border-secondary hover:border-primary cursor-pointer  px-4 py-2  text-md font-medium shadow-sm">
                             {x.name}
                         </div>
 

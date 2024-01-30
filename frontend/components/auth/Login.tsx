@@ -42,7 +42,7 @@ const Login = () => {
         })
         const result = await res.json()
         if(result.success){
-            document.cookie = `token=${result.message};secure=true; path=/`
+            localStorage.setItem('token',result.message)
             toast.success("Logged In")
             router.push('/dashboard')
         }else{

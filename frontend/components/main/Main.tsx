@@ -7,9 +7,31 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { Input } from "../ui/input"
+import { Label } from "../ui/label"
+import { Button } from "../ui/button"
+import { FormEvent, useState } from "react"
 
 
 const Main = () => {
+  const [data,setData] = useState("")
+  const createDocument = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    console.log("Clicked")
+    const token = localStorage.getItem('token')
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/doc/create`,
+    {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "token":token
+      },
+      body:JSON.stringify({name:data})
+    })
+    const result = await res.json()
+    console.log(result)
+  }
+
   return (
     <>
       <div className='flex items-center flex-col gap-3 justify-center w-full h-full'>
@@ -21,11 +43,12 @@ const Main = () => {
           <SheetContent className="border-none">
             <SheetHeader>
               <SheetTitle>Create a New File</SheetTitle>
-              <SheetDescription>
-                This action cannot be undone. This will permanently delete your account
-                and remove your data from our servers.
-              </SheetDescription>
             </SheetHeader>
+            <form className="mt-4" onSubmit={(e)=>createDocument(e)}>
+              {/* <Label>Name</Label> */}
+              <Input value={data} onChange={(e)=>{setData(e.target.value)}} required className="mt-2 py-4" placeholder="Enter the name of the file" type = "text" />
+              <Button className="mt-3 w-full" type = "submit">Create</Button>
+            </form>
           </SheetContent>
         </Sheet>
 
