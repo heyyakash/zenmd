@@ -191,3 +191,12 @@ func (s *PostgresStore) GetDocumentByID(id string, email string) (modals.Markdow
 	}
 	return data, err
 }
+
+func (s *PostgresStore) UpdateDocumentByID(id string, email string, data string) error {
+	query := `UPDATE markdown
+		SET content = $1
+		WHERE email = $2 AND id = $3;
+	`
+	_, err := s.db.Exec(query, data, email, id)
+	return err
+}
