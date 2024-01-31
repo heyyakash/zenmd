@@ -11,7 +11,6 @@ export const getDocs = async () => {
 }
 
 export const getDocById = async (id:string) => {
-    console.log(id)
     const token = localStorage.getItem("token")
     const data = await fetch(`${host}/docs/${id}`,{
         headers:{
@@ -19,5 +18,17 @@ export const getDocById = async (id:string) => {
         }
     })
 
+    return await data.json()
+}
+
+export const updateDocById = async (id:string, value:string) => {
+    const token = localStorage.getItem("token")
+    const data = await fetch(`${host}/docs/${id}`,{
+        method:"PATCH",
+        headers:{
+            "token":token as string
+        },
+        body:JSON.stringify({data:value})
+    })
     return await data.json()
 }

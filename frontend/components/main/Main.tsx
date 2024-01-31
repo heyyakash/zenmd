@@ -13,11 +13,13 @@ import { Button } from "../ui/button"
 import { FormEvent, useState } from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/router"
+import { useQueryClient } from "react-query"
 
 
 const Main = () => {
   const [data,setData] = useState("")
   const router = useRouter()
+  const queryClient = useQueryClient()
   const createDocument = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log("Clicked")
@@ -27,13 +29,14 @@ const Main = () => {
       method:"POST",
       headers:{
         "Content-Type":"application/json",
-        "token":token
+        "token":token as string
       },
       body:JSON.stringify({name:data})
     })
     const result = await res.json()
     if (result.success){
       toast.success("Document Created!")
+      queryClient.invalidateQueries('docs')
       router.push(`editor/${result.message}`)
     }
     else if (result.success===false && result.message==="Document already exists"){
