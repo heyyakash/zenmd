@@ -14,7 +14,6 @@ interface File {
 const Aside = () => {
 
     const {data,error, isLoading} = useQuery("docs", getDocs) 
-    console.log(data)
     if (isLoading){
         return <>Loading</>
     }
@@ -40,7 +39,7 @@ const CollapsibleBar: React.FC<CollapsibleBarProps> = (props) => {
         <Collapsible
             open={isOpen}
             onOpenChange={setIsOpen}
-            className=" border-b-2 border-secondary w-full space-y-2 p-2"
+            className=" border-b-2 border-secondary w-full space-y-2 p-2 pl-4"
         >
             <div className="flex items-center justify-between space-x-4 ">
                 <h4 className="text-sm font-semibold">

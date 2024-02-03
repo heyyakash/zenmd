@@ -7,6 +7,8 @@ import { useQuery } from 'react-query'
 import rehypeHighlight from 'rehype-highlight'
 import remarkGfm from 'remark-gfm'
 import { Button } from '../ui/button'
+import { UserRoundPlus } from 'lucide-react'
+import AddCollaborator from '../AddCollaborator'
 
 interface props {
     id: string
@@ -35,8 +37,9 @@ const Editor: React.FC<props> = ({ id }) => {
         <div className='grid w-full h-full grid-cols-2 grid-rows-1'>
             <div className='w-full h-screen flex flex-col border-r border-secondary'>
                 <div className='w-full h-full'>
-                    <div className='w-full h-[60px] flex items-center'>
+                    <div className='w-full h-[50px] flex items-center'>
                         <Button onClick={()=>Update()} className='ml-auto mr-3 ' size={"lg"}>Save</Button>
+                        <AddCollaborator />
                     </div>
                     <textarea
                         autoFocus
@@ -45,7 +48,6 @@ const Editor: React.FC<props> = ({ id }) => {
                         className='w-full p-10 bg-gray-100 dark:bg-black outline-none  h-full font-inter text-xl'
                         placeholder='Enter markdown here'
                     >
-
                     </textarea>
                 </div>
 
