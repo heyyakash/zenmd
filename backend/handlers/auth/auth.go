@@ -70,3 +70,25 @@ func LoginUser() gin.HandlerFunc {
 		ctx.JSON(http.StatusOK, helpers.ResponseGenerator(token, true))
 	}
 }
+
+func EmailExists() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		type request struct {
+			Email string `json:"email"`
+		}
+		var req request
+		if err := ctx.BindJSON(&req); err != nil {
+			log.Print(err)
+			ctx.JSON(http.StatusBadGateway, helpers.ResponseGenerator("Error parsing json", false))
+			return
+		}
+		exists, err := db.Database.CheckEmailExistence(req.Email)
+		log.Print(req.Email)
+		if err != nil {
+			log.Print(err)
+			ctx.JSON(http.StatusInternalServerError, helpers.ResponseGenerator("Couldn't check", false))
+			return
+		}
+		ctx.JSON(http.StatusOK, helpers.ResponseGenerator(exists, true))
+	}
+}

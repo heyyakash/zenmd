@@ -9,6 +9,7 @@ import (
 func DocumentRoute(c *gin.Engine) {
 	c.GET("/docs", middlewares.ValidateUser(), document.GetDocument())
 	c.GET("/docs/:id", middlewares.ValidateUser(), document.GetDocumentByID())
-	c.POST("/doc/create", middlewares.ValidateUser(), document.CreateDocument())
+	c.POST("/docs/create", middlewares.ValidateUser(), document.CreateDocument())
 	c.PATCH("/docs/:id", middlewares.ValidateUser(), document.UpdateDocument())
+	c.POST("/docs/collab", middlewares.ValidateUser(), document.AddCollaborator())
 }
