@@ -32,3 +32,15 @@ export const updateDocById = async (id:string, value:string) => {
     })
     return await data.json()
 }
+
+export const addCollaborator = async (id:string, email:string) => {
+    const token = localStorage.getItem("token")
+    const data = await fetch(`${host}/docs/collab`,{
+        method:"POST",
+        headers:{
+            "token":token as string
+        },
+        body:JSON.stringify({id, email})
+    })
+    return await data.json()
+}

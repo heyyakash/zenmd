@@ -39,7 +39,7 @@ const Editor: React.FC<props> = ({ id }) => {
                 <div className='w-full h-full'>
                     <div className='w-full h-[50px] flex items-center'>
                         <Button onClick={()=>Update()} className='ml-auto mr-3 ' size={"lg"}>Save</Button>
-                        <AddCollaborator />
+                        <AddCollaborator id = {id} />
                     </div>
                     <textarea
                         autoFocus

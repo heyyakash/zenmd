@@ -24,7 +24,7 @@ const Main = () => {
     e.preventDefault()
     console.log("Clicked")
     const token = localStorage.getItem('token')
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/doc/create`,
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/docs/create`,
     {
       method:"POST",
       headers:{
