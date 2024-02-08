@@ -16,6 +16,9 @@ func AddCollaborator() gin.HandlerFunc {
 			Id    string `json:"id"`
 			Email string `json:"email"`
 		}
+
+		senderEmail := ctx.MustGet("email").(string)
+
 		var req request
 		if err := ctx.BindJSON(&req); err != nil {
 			log.Print(err)
@@ -33,9 +36,16 @@ func AddCollaborator() gin.HandlerFunc {
 			ctx.JSON(http.StatusNotFound, helpers.ResponseGenerator("User has not signed up on zenmd", false))
 			return
 		}
+		id, err := db.Database.CreateNewInvitation(senderEmail, req.Email, req.Id)
+		if err != nil {
+			log.Print(err)
+			ctx.JSON(http.StatusInternalServerError, helpers.ResponseGenerator("Error in creating a new invitation", false))
+			return
+		}
+		url := helpers.LoadString("HOST_URL") + "docs/invitations/" + id
 		mail := modals.Email{
 			To:      req.Email,
-			Content: "Hello!! accept the inviation - ",
+			Content: "Hello!! " + senderEmail + " Invited you to collaborate with them \n Click here to accept their invitation -> " + url,
 			Subject: "Invitation to collaborate - ZenMD",
 		}
 		if err := helpers.SendEmail(&mail); err != nil {
@@ -46,3 +56,9 @@ func AddCollaborator() gin.HandlerFunc {
 		ctx.JSON(http.StatusOK, helpers.ResponseGenerator("Invitation sent", true))
 	}
 }
+
+// func AcceptInvitation() gin.HandlerFunc {
+// 	return func(ctx *gin.Context) {
+// 		id := ctx.Param("id")
+// 	}
+// }
