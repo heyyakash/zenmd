@@ -12,4 +12,5 @@ func DocumentRoute(c *gin.Engine) {
 	c.POST("/docs/create", middlewares.ValidateUser(), document.CreateDocument())
 	c.PATCH("/docs/:id", middlewares.ValidateUser(), document.UpdateDocument())
 	c.POST("/docs/collab", middlewares.ValidateUser(), document.AddCollaborator())
+	c.GET("/docs/invitations/:id", document.AcceptInvitation())
 }

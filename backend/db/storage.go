@@ -82,6 +82,7 @@ func (s *PostgresStore) CreateInvitationTable() error {
 		id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
 		recipient_email VARCHAR(255) NOT NULL,
 		sender_email VARCHAR(255) NOT NULL,
+		permission VARCHAR(20) NOT NULL,
 		file VARCHAR(255) NOT NULL,
 		created_at TIMESTAMP DEFAULT now()
 	)
@@ -90,16 +91,39 @@ func (s *PostgresStore) CreateInvitationTable() error {
 	return err
 }
 
+func (s *PostgresStore) CreateSharedTable() error {
+	_, err := s.db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`)
+	if err != nil {
+		return err
+	}
+	query := `
+	CREATE TABLE if not exists shared (
+		id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+		recipient_email VARCHAR(255) NOT NULL,
+		sender_email VARCHAR(255) NOT NULL,
+		file UUID NOT NULL ,
+		permission VARCHAR(20) NOT NULL,
+		CONSTRAINT fk_markdown FOREIGN KEY (file) REFERENCES markdown(id) ON DELETE CASCADE
+	)
+	`
+	_, err = s.db.Exec(query)
+	return err
+}
+
 func (s *PostgresStore) InitDB() {
 	if err := s.CreateAccounTable(); err != nil {
-		log.Fatal("Could not initalize account table", err)
+		log.Fatal("Could not initalize account table : ", err)
 	}
 	if err := s.CreateMarkdownTable(); err != nil {
-		log.Fatal("Could not initialize markdown table", err)
+		log.Fatal("Could not initialize markdown table : ", err)
 	}
 	if err := s.CreateInvitationTable(); err != nil {
-		log.Fatal("Could not initialize markdown table", err)
+		log.Fatal("Could not initialize markdown table : ", err)
 	}
+	if err := s.CreateSharedTable(); err != nil {
+		log.Fatal("Could not initialize shared table : ", err)
+	}
+
 }
 
 func (s *PostgresStore) DoesRowExist(email string, name string) (bool, error) {
